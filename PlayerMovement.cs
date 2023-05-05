@@ -38,9 +38,15 @@ public class PlayerMovement : MonoBehaviour
         Vector3 right = transform.TransformDirection(Vector3.right);
 
         // Press Left Shift to run
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
-        float curSpeedX = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Vertical") : 0;
-        float curSpeedY = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Horizontal") : 0;
+        bool isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftControl);
+        float curSpeedX = canMove ? (isRunning && !IsJumping() ? runSpeed : walkSpeed) * Input.GetAxis("Vertical") : 0;
+        float curSpeedY = canMove ? (isRunning && !IsJumping() ? runSpeed : walkSpeed) * Input.GetAxis("Horizontal") : 0;
+
+        bool IsJumping()
+        {
+            return !characterController.isGrounded;
+        }
+
         float movementDirectionY = moveDirection.y;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
