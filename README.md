@@ -19,5 +19,4 @@ To use Pause Menu Script:
 4. Add The script to the canvas and the in the player field add your player Gameobejct which has the script PlayerMovement.cs
 5. Its Almost done. In the buttons add onlick() functions and now add canvas object.
 6. Beside this there would be a function. Select this and click on PauseMenu and find Resume().
-7. 
-8. 
+   
