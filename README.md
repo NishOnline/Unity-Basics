@@ -19,4 +19,10 @@ To use Pause Menu Script:
 4. Add The script to the canvas and the in the player field add your player Gameobejct which has the script PlayerMovement.cs
 5. Its Almost done. In the buttons add onlick() functions and now add canvas object.
 6. Beside this there would be a function. Select this and click on PauseMenu and find Resume().
-   
+
+To use EnemyFollow Script:
+1. Go to Windows>AI>Navigation and set up its parameters.
+2. Assign the script t whom you want to be Enemy.
+3. Add NavMeshAgent to your Enemy
+4. Add NavMeshSuface to the plane the enemy will Move and then make sure to click Bake.
+5. Fill the Transforms in the EnemyFollow Script.
