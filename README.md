@@ -26,3 +26,6 @@ To use EnemyFollow Script:
 3. Add NavMeshAgent to your Enemy
 4. Add NavMeshSuface to the plane the enemy will Move and then make sure to click Bake.
 5. Fill the Transforms in the EnemyFollow Script.
+
+To use CarMovement: 
+https://www.youtube.com/watch?v=LJr7satfAg8
