@@ -1,6 +1,6 @@
 # Unity-Basics
 
-#Unity Movement.
+Unity Movement.
 This Script has basic unity movements with Jumping and Sprinting.
 To use this script CORRECTLY:
 1. Add a 3d Object like Cylinder name it Player
@@ -35,7 +35,7 @@ https://www.youtube.com/watch?v=LJr7satfAg8
 To use PullDoor:
 1. Add your Door in the scene and add a rigidbody component to its and make sure to Turn its "is Kinematic" on .
 2. Add a empty gameobject and position it such that it becomes its hinge.
-3. Name this DoorHinge and make sure that Door is its child.
+3. Name this DoorHinge and make sure that Door is its first child.
 4. You can now check the working of your door by rotating the DoorHinge.
 5. Attach the script to DoorHinge and drag the Player transform and camera(for this see playermovement script).
    
