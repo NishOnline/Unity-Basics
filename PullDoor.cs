@@ -16,6 +16,7 @@ public class PullDoor : MonoBehaviour
     public float crosshairMinSize = 3f;
     public DoorOpeningDirection openingDirection = DoorOpeningDirection.Both;
     public float doorOpenAngle = 90f; // Set the angle to open the door in either direction
+    public int doorOpeningSensitivity = 2; // Sensitivity for door opening
 
     private bool isDragging = false;
     private Camera playerCamera;
@@ -74,7 +75,7 @@ public class PullDoor : MonoBehaviour
         if (isDragging)
         {
             float mouseDelta = Input.GetAxis("Mouse Y") * -1; // Change to Mouse Y and invert for up/down behavior
-            float newRotation = currentRotation + mouseDelta * 2; // Adjust the sensitivity if needed
+            float newRotation = currentRotation + mouseDelta * doorOpeningSensitivity; // Use sensitivity for rotation adjustment
 
             // Clamp the rotation based on the selected opening direction
             switch (openingDirection)
