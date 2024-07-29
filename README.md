@@ -38,4 +38,11 @@ To use PullDoor:
 3. Name this DoorHinge and make sure that Door is its first child.
 4. You can now check the working of your door by rotating the DoorHinge.
 5. Attach the script to DoorHinge and drag the Player transform and camera(for this see playermovement script).
-   
+
+To use PickupAndThrow:
+1. Attach the PickupAndThrow script to your player object.
+2. Set up the crosshair
+3. Make sure the items you want to be pickable have colliders and rigidbodies attached
+4. Assign the layer of these items to a custom layer (e.g., "Pickable").
+5. Set the pickupLayer field in the Inspector to this custom layer.
+6. Create an empty GameObject as a child of the player where you want the picked-up items to be held (e.g., in front of the player). Assign this empty GameObject to the itemHolder field in the Inspector.
