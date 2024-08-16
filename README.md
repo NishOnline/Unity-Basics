@@ -11,7 +11,7 @@ To use this script CORRECTLY:
 
 To Display Fps:
 1. Create an empty Canvas
-2. create text mesh pro to its Child and then Set its Text Content and its Position
+2. create text mesh pro(GUI) to its Child and then Set its Text Content and its Position
 3. Add Script to the Canvas and assing the textMeshPRo to the text option
 
 To use Pause Menu Script:
