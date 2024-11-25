@@ -38,6 +38,7 @@ To use PullDoor:
 3. Name this DoorHinge and make sure that Door is its first child.
 4. You can now check the working of your door by rotating the DoorHinge.
 5. Attach the script to DoorHinge and drag the Player transform and camera(for this see playermovement script).
+6. Make sure that the player camera is tagged as MainCamera.
 
 To use PickupAndThrow:
 1. Attach the PickupAndThrow script to your player object.
