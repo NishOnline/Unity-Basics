@@ -1,0 +1,81 @@
+using UnityEngine;
+
+[RequireComponent(typeof(CharacterController))]
+public class 3Pmovement : MonoBehaviour
+{
+    public float walkSpeed = 6f;
+    public float runSpeed = 12f;
+    public float jumpPower = 7f;
+    public float gravity = 10f;
+    public float pushForce = 1f;
+
+    public bool canMove = true;
+
+    private CharacterController characterController;
+    private Vector3 moveDirection;
+
+    void Start()
+    {
+        characterController = GetComponent<CharacterController>();
+    }
+
+    void Update()
+    {
+        HandleMovement();
+        HandleJumpAndGravity();
+
+        characterController.Move(moveDirection * Time.deltaTime);
+    }
+
+    void HandleMovement()
+    {
+        if (!canMove) return;
+
+        Vector3 forward = transform.forward;
+        Vector3 right = transform.right;
+
+        bool isRunning =
+            Input.GetKey(KeyCode.LeftShift) ||
+            Input.GetKey(KeyCode.RightShift) ||
+            Input.GetKey(KeyCode.LeftControl);
+
+        float speed = isRunning && characterController.isGrounded
+            ? runSpeed
+            : walkSpeed;
+
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        Vector3 horizontalMove = (forward * moveZ + right * moveX) * speed;
+        moveDirection.x = horizontalMove.x;
+        moveDirection.z = horizontalMove.z;
+    }
+
+    void HandleJumpAndGravity()
+    {
+        if (characterController.isGrounded)
+        {
+            if (moveDirection.y < 0)
+                moveDirection.y = -2f; // keep grounded
+
+            if (Input.GetButton("Jump") && canMove)
+                moveDirection.y = jumpPower;
+        }
+        else
+        {
+            moveDirection.y -= gravity * Time.deltaTime;
+        }
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody rb = hit.collider.attachedRigidbody;
+        if (rb == null || rb.isKinematic) return;
+
+        Vector3 forceDir = hit.transform.position - transform.position;
+        forceDir.y = 0;
+        forceDir.Normalize();
+
+        rb.AddForceAtPosition(forceDir * pushForce, transform.position, ForceMode.Impulse);
+    }
+}
