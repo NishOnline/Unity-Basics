@@ -47,3 +47,9 @@ To use PickupAndThrow:
 4. Assign the layer of these items to a custom layer (e.g., "Pickable").
 5. Set the pickupLayer field in the Inspector to this custom layer.
 6. Create an empty GameObject as a child of the player where you want the picked-up items to be held (e.g., in front of the player). Assign this empty GameObject to the itemHolder field in the Inspector.
+
+3Pmovement:
+1.Add this script to your player
+2.Add Camera to heirarchy
+3.Add cinemachine freelook camera(it also automatically adds brain to Camera)
+4.Enjoy
