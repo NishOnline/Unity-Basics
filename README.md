@@ -52,4 +52,24 @@ To use PickupAndThrow:
 
 1. Attach this script to your player
 2. Add Camera and cinemachine free look camera in the heirarchy not as a child of player
-3. Assign follow target to Player in FreeLookCamera 
+3. Assign follow target to Player in FreeLookCamera
+
+
+DayNightCycle: 
+
+Create two directional lights in your scene:
+One for the Sun
+One for the Moon
+Create empty GameObjects for sun/moon rotation
+These act as pivots for smooth rotation
+
+Attach the script to an empty GameObject and assign:
+The sun and moon lights
+The sun and moon transforms
+Adjust the day duration (default is 10 minutes)
+
+Customize in the Inspector:
+The gradients for sun/moon colors
+Light intensity curves
+Ambient and fog colors
+Fog density curve
