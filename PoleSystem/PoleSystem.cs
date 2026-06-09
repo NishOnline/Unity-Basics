@@ -31,6 +31,10 @@ public class PoleSystem : MonoBehaviour
     [Tooltip("Align the pole's vertical axis to the terrain surface normal? (Keep unchecked for standard upright poles)")]
     public bool alignToNormal = false;
 
+    [Range(0f, 360f)]
+    [Tooltip("The rotation angle (in degrees) around the vertical axis for newly placed poles.")]
+    public float poleRotationY = 0f;
+
     [Header("Runtime Hotkeys")]
     public bool enableRuntimeControls = true;
     public KeyCode placementToggleKey = KeyCode.P;
@@ -94,6 +98,7 @@ public class PoleSystem : MonoBehaviour
         if (Application.isPlaying && IsPlacementModeActive)
         {
             HandleRuntimePlacement();
+            HandleRuntimeRotationInput();
         }
     }
 
@@ -145,6 +150,35 @@ public class PoleSystem : MonoBehaviour
     }
 
     /// <summary>
+    /// Processes rotation inputs (Q/E or Shift+Scroll) at runtime.
+    /// </summary>
+    private void HandleRuntimeRotationInput()
+    {
+        // Continuous rotation with Q and E
+        if (Input.GetKey(KeyCode.Q))
+        {
+            poleRotationY -= 90f * Time.deltaTime;
+            poleRotationY = (poleRotationY % 360f + 360f) % 360f;
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            poleRotationY += 90f * Time.deltaTime;
+            poleRotationY = (poleRotationY % 360f + 360f) % 360f;
+        }
+
+        // Discrete rotation using Shift + Scroll Wheel
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            float scroll = Input.mouseScrollDelta.y;
+            if (Mathf.Abs(scroll) > 0.01f)
+            {
+                poleRotationY += scroll * 15f; // 15 degrees per scroll tick
+                poleRotationY = (poleRotationY % 360f + 360f) % 360f;
+            }
+        }
+    }
+
+    /// <summary>
     /// Places a pole at the specified position and normal, setting up the connectors and wires.
     /// </summary>
     public Pole PlacePole(Vector3 position, Vector3 normal)
@@ -169,7 +203,8 @@ public class PoleSystem : MonoBehaviour
         }
 
         // Instantiate the pole
-        Quaternion rotation = alignToNormal ? Quaternion.FromToRotation(Vector3.up, normal) : Quaternion.identity;
+        Quaternion baseRotation = alignToNormal ? Quaternion.FromToRotation(Vector3.up, normal) : Quaternion.identity;
+        Quaternion rotation = baseRotation * Quaternion.Euler(0f, poleRotationY, 0f);
         GameObject poleObj = Instantiate(polePrefab, position, rotation);
         poleObj.name = $"Pole_{placedPoles.Count + 1}";
 
@@ -263,7 +298,8 @@ public class PoleSystem : MonoBehaviour
         {
             previewInstance.SetActive(true);
             previewInstance.transform.position = position;
-            previewInstance.transform.rotation = alignToNormal ? Quaternion.FromToRotation(Vector3.up, normal) : Quaternion.identity;
+            Quaternion baseRotation = alignToNormal ? Quaternion.FromToRotation(Vector3.up, normal) : Quaternion.identity;
+            previewInstance.transform.rotation = baseRotation * Quaternion.Euler(0f, poleRotationY, 0f);
         }
     }
 
