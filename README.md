@@ -76,3 +76,25 @@ Fog density curve
 
 **Volumetric Fog**
 https://www.youtube.com/watch?v=Mlpr9jpdPw8
+
+
+**PoleSystem**
+
+
+_Prefab Setup:_
+
+Create a simple cube/cylinder pole in Unity or use the provided ElectricityPole.obj file.
+Attach the Pole script to it. Add a couple of child GameObjects called Connector_L and Connector_R to see if it auto-detects them.
+
+_Runtime Testing:_
+
+Attach PoleSystem to an empty GameObject.
+Assign the pole prefab, a ground layer mask, and a wire material.
+Run the game. Click around the terrain.
+Check if poles are placed at the cursor position and wire paths bend naturally.
+Check if moving poles dynamically updates the wires.
+
+_Editor Testing:_
+
+Click "Toggle Editor Placement Mode" in the custom Inspector.
+Click on the terrain in the Scene view to verify that editor-time placement and undo/redo function correctly.
