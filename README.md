@@ -98,3 +98,7 @@ _Editor Testing:_
 
 Click "Toggle Editor Placement Mode" in the custom Inspector.
 Click on the terrain in the Scene view to verify that editor-time placement and undo/redo function correctly.
+
+
+**Random Placer**
+This script allows you to place 3d models randomly over a terrain. Create a empty gameobject. Assign the RandomPlacer.cs to the gameobject and use it my adding the 3d models and then right clicking/enter it. 
