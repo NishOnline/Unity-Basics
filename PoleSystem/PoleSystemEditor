@@ -1,0 +1,181 @@
+using UnityEngine;
+using UnityEditor;
+
+[CustomEditor(typeof(PoleSystem))]
+public class PoleSystemEditor : Editor
+{
+    private PoleSystem poleSystem;
+
+    // Serialized Properties for Undo/Redo & Prefab support
+    private SerializedProperty polePrefabProp;
+    private SerializedProperty terrainLayerProp;
+    private SerializedProperty wireMaterialProp;
+    
+    private SerializedProperty wireWidthProp;
+    private SerializedProperty wireSagProp;
+    private SerializedProperty wireSagFactorProp;
+    private SerializedProperty wireSegmentsProp;
+    
+    private SerializedProperty minDistanceProp;
+    private SerializedProperty alignToNormalProp;
+    private SerializedProperty poleRotationYProp;
+    
+    private SerializedProperty enableRuntimeControlsProp;
+    private SerializedProperty placementToggleKeyProp;
+    private SerializedProperty undoKeyProp;
+    private SerializedProperty clearKeyProp;
+
+    private void OnEnable()
+    {
+        poleSystem = (PoleSystem)target;
+        
+        // Clean up preview if selection changes
+        if (poleSystem != null)
+        {
+            poleSystem.DestroyPreview();
+        }
+
+        // Cache properties
+        polePrefabProp = serializedObject.FindProperty("polePrefab");
+        terrainLayerProp = serializedObject.FindProperty("terrainLayer");
+        wireMaterialProp = serializedObject.FindProperty("wireMaterial");
+        
+        wireWidthProp = serializedObject.FindProperty("wireWidth");
+        wireSagProp = serializedObject.FindProperty("wireSag");
+        wireSagFactorProp = serializedObject.FindProperty("wireSagFactor");
+        wireSegmentsProp = serializedObject.FindProperty("wireSegments");
+        
+        minDistanceProp = serializedObject.FindProperty("minDistance");
+        alignToNormalProp = serializedObject.FindProperty("alignToNormal");
+        poleRotationYProp = serializedObject.FindProperty("poleRotationY");
+        
+        enableRuntimeControlsProp = serializedObject.FindProperty("enableRuntimeControls");
+        placementToggleKeyProp = serializedObject.FindProperty("placementToggleKey");
+        undoKeyProp = serializedObject.FindProperty("undoKey");
+        clearKeyProp = serializedObject.FindProperty("clearKey");
+    }
+
+    private void OnDisable()
+    {
+        if (poleSystem != null)
+        {
+            poleSystem.DestroyPreview();
+        }
+    }
+
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+
+        // 1. Prefabs & Materials Section
+        EditorGUILayout.LabelField("Prefabs & Materials", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(polePrefabProp);
+        EditorGUILayout.PropertyField(terrainLayerProp);
+        EditorGUILayout.PropertyField(wireMaterialProp);
+
+        EditorGUILayout.Space(10);
+
+        // 2. Wire Customization Section with Reset Buttons
+        EditorGUILayout.LabelField("Wire Customization Settings", EditorStyles.boldLabel);
+        DrawPropertyWithReset(wireWidthProp, 0.04f);
+        DrawPropertyWithReset(wireSagProp, 0.4f);
+        DrawPropertyWithReset(wireSagFactorProp, 0.01f);
+        DrawPropertyWithReset(wireSegmentsProp, 20);
+
+        EditorGUILayout.Space(10);
+
+        // 3. Placement & Rotation Rules with Reset Buttons
+        EditorGUILayout.LabelField("Placement & Rotation Rules", EditorStyles.boldLabel);
+        DrawPropertyWithReset(minDistanceProp, 3.0f);
+        DrawPropertyWithReset(alignToNormalProp, false);
+        DrawPropertyWithReset(poleRotationYProp, 0.0f);
+
+        EditorGUILayout.Space(10);
+
+        // 4. Runtime Configurations
+        EditorGUILayout.LabelField("Runtime Keyboard Configurations", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(enableRuntimeControlsProp);
+        EditorGUILayout.PropertyField(placementToggleKeyProp);
+        EditorGUILayout.PropertyField(undoKeyProp);
+        EditorGUILayout.PropertyField(clearKeyProp);
+
+        serializedObject.ApplyModifiedProperties();
+
+        EditorGUILayout.Space(15);
+        EditorGUILayout.LabelField("Editor Placement & Utility Tools", EditorStyles.boldLabel);
+
+        // Display current mode status with stylized label
+        GUIStyle statusStyle = new GUIStyle(EditorStyles.boldLabel);
+        if (poleSystem.IsPlacementModeActive)
+        {
+            statusStyle.normal.textColor = Color.green;
+            EditorGUILayout.LabelField("Placement Mode: ACTIVE (Click in Scene View to place)", statusStyle);
+        }
+        else
+        {
+            statusStyle.normal.textColor = Color.gray;
+            EditorGUILayout.LabelField("Placement Mode: INACTIVE", statusStyle);
+        }
+
+        // Toggle Placement Mode button
+        string toggleButtonText = poleSystem.IsPlacementModeActive ? "Disable Placement Mode" : "Enable Placement Mode";
+        if (GUILayout.Button(toggleButtonText, GUILayout.Height(30)))
+        {
+            poleSystem.IsPlacementModeActive = !poleSystem.IsPlacementModeActive;
+            SceneView.RepaintAll();
+        }
+
+        EditorGUILayout.Space(5);
+
+        // Action Buttons Row
+        EditorGUILayout.BeginHorizontal();
+        
+        if (GUILayout.Button("Undo Last Pole", GUILayout.Height(25)))
+        {
+            Undo.RecordObject(poleSystem, "Undo Last Pole");
+            poleSystem.UndoLastPole();
+            EditorUtility.SetDirty(poleSystem);
+            if (!Application.isPlaying)
+            {
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(poleSystem.gameObject.scene);
+            }
+        }
+
+        if (GUILayout.Button("Clear All Poles", GUILayout.Height(25)))
+        {
+            if (EditorUtility.DisplayDialog("Clear All Poles", "Are you sure you want to delete all placed poles and wires?", "Yes", "No"))
+            {
+                Undo.RecordObject(poleSystem, "Clear All Poles");
+                poleSystem.ClearAllPoles();
+                EditorUtility.SetDirty(poleSystem);
+                if (!Application.isPlaying)
+                {
+                    UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(poleSystem.gameObject.scene);
+                }
+            }
+        }
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space(10);
+        EditorGUILayout.HelpBox(
+            "Instructions:\n" +
+            "1. Enable Placement Mode.\n" +
+            "2. Hover over terrain in the Scene View to see the preview.\n" +
+            "3. Use Q / E keys (or hold Shift + Scroll Wheel) to rotate the preview pole.\n" +
+            "4. Left-Click to place a pole and automatically span wires.\n" +
+            "5. Click the 'Reset' buttons next to inputs to revert settings to defaults.", 
+            MessageType.Info
+        );
+    }
+
+    /// <summary>
+    /// Helper to render a field alongside a small Reset button.
+    /// </summary>
+    private void DrawPropertyWithReset(SerializedProperty prop, float defaultValue)
+    {
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(prop);
+        i...
+
+<...etc...>
