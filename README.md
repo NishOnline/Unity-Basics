@@ -98,6 +98,7 @@ _Editor Testing:_
 
 Click "Toggle Editor Placement Mode" in the custom Inspector.
 Click on the terrain in the Scene view to verify that editor-time placement and undo/redo function correctly.
+Hold Shift and drag your mouse to rotate the poles placing.
 
 
 **Random Placer**
